@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Smart WPS Generator | AWS D1.1</title>
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -28,25 +28,45 @@
             font-family: var(--font-ar);
         }
 
-        /* WPS Document Styling for Professional Look */
         .wps-document {
             background: white;
-            padding: 2rem;
+            padding: 1rem;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .wps-document {
+                padding: 2rem;
+            }
         }
 
         .wps-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 1rem;
-            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.75rem;
+        }
+
+        @media (min-width: 768px) {
+            .wps-table {
+                font-size: 0.875rem;
+                margin-bottom: 1rem;
+            }
         }
 
         .wps-table th, .wps-table td {
             border: 1px solid #000;
-            padding: 0.5rem;
+            padding: 0.4rem 0.3rem;
             text-align: left;
+            white-space: nowrap;
+        }
+
+        @media (min-width: 768px) {
+            .wps-table th, .wps-table td {
+                padding: 0.5rem;
+            }
         }
 
         body[dir="rtl"] .wps-table th, body[dir="rtl"] .wps-table td {
@@ -66,38 +86,103 @@
             background-color: #e5e7eb;
             font-weight: bold;
             text-transform: uppercase;
-            padding: 0.25rem 0.5rem;
+            padding: 0.2rem 0.5rem;
             border: 1px solid #000;
             border-bottom: none;
-            margin-top: 1rem;
+            margin-top: 0.75rem;
+            font-size: 0.7rem;
+        }
+
+        @media (min-width: 768px) {
+            .section-title {
+                font-size: 0.875rem;
+                padding: 0.25rem 0.5rem;
+                margin-top: 1rem;
+            }
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        @media (max-width: 480px) {
+            .btn-icon {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+                flex: 1;
+            }
+            .btn-icon svg {
+                width: 1.2rem;
+                height: 1.2rem;
+            }
+        }
+
+        .form-input, .form-select {
+            font-size: 0.9rem;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            border: 1px solid #d1d5db;
+            width: 100%;
+        }
+
+        @media (max-width: 480px) {
+            .form-input, .form-select {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 <body class="text-gray-800">
 
     <!-- Navbar -->
-    <nav class="bg-blue-900 text-white p-4 shadow-md">
+    <nav class="bg-blue-900 text-white p-3 shadow-md">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold" data-i18n="appTitle">AWS D1.1 Smart WPS Generator</h1>
-            <button onclick="toggleLanguage()" class="bg-blue-700 hover:bg-blue-600 px-4 py-2 rounded transition" id="langToggleBtn">
+            <h1 class="text-base md:text-xl font-bold" data-i18n="appTitle">AWS D1.1 Smart WPS Generator</h1>
+            <button onclick="toggleLanguage()" class="bg-blue-700 hover:bg-blue-600 px-3 py-1.5 md:px-4 md:py-2 rounded transition text-sm md:text-base" id="langToggleBtn">
                 عربي
             </button>
         </div>
     </nav>
 
-    <div class="container mx-auto p-4 grid grid-cols-1 lg:grid-cols-12 gap-6 mt-4">
+    <div class="container mx-auto p-3 md:p-4 grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6 mt-2 md:mt-4">
         
         <!-- Input Form Section (Left side) -->
-        <div class="lg:col-span-4 bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-600">
-            <h2 class="text-lg font-bold mb-4 border-b pb-2" data-i18n="inputDataTitle">Original Data Input</h2>
+        <div class="lg:col-span-4 bg-white p-4 md:p-6 rounded-lg shadow-md border-t-4 border-blue-600">
+            <h2 class="text-lg md:text-xl font-bold mb-3 border-b pb-2" data-i18n="inputDataTitle">Original Data Input</h2>
             
-            <form id="wpsForm" class="space-y-4">
+            <form id="wpsForm" class="space-y-3 md:space-y-4">
                 
+                <!-- Company Name & WPS No. (User editable) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1" data-i18n="companyNameInput">Company Name</label>
+                        <input type="text" id="companyNameInput" value="Smart Weld Co." class="form-input" onchange="generateSmartWPS()" oninput="generateSmartWPS()">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1" data-i18n="wpsNoInput">WPS No.</label>
+                        <input type="text" id="wpsNoInput" value="WPS-001" class="form-input" onchange="generateSmartWPS()" oninput="generateSmartWPS()">
+                    </div>
+                </div>
+
                 <!-- Process & Position -->
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-2 md:gap-4">
                     <div>
                         <label class="block text-sm font-medium mb-1" data-i18n="process">Welding Process</label>
-                        <select id="process" class="w-full border rounded p-2 text-sm focus:ring-blue-500 focus:border-blue-500" onchange="generateSmartWPS()">
+                        <select id="process" class="form-select" onchange="generateSmartWPS()">
                             <option value="SMAW">SMAW</option>
                             <option value="GMAW">GMAW</option>
                             <option value="FCAW">FCAW</option>
@@ -106,7 +191,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1" data-i18n="position">Position</label>
-                        <select id="position" class="w-full border rounded p-2 text-sm focus:ring-blue-500 focus:border-blue-500" onchange="generateSmartWPS()">
+                        <select id="position" class="form-select" onchange="generateSmartWPS()">
                             <option value="1G">1G (Flat)</option>
                             <option value="2G">2G (Horizontal)</option>
                             <option value="3G">3G (Vertical)</option>
@@ -119,7 +204,7 @@
                 <!-- Base Metal 1 -->
                 <div class="bg-gray-50 p-3 rounded border">
                     <label class="block text-sm font-bold mb-2 text-blue-800" data-i18n="baseMetal1">Base Metal 1</label>
-                    <select id="bm1" class="w-full border rounded p-2 text-sm mb-2" onchange="generateSmartWPS()">
+                    <select id="bm1" class="form-select mb-2" onchange="generateSmartWPS()">
                         <option value="A36">ASTM A36 (EN 10025 S235JR)</option>
                         <option value="A572-50">ASTM A572 Gr50 (EN 10025 S355J2)</option>
                         <option value="A516-70">ASTM A516 Gr70 (EN 10028 P355GH)</option>
@@ -127,13 +212,13 @@
                         <option value="A242">ASTM A242 (EN 10027 S355J2W)</option>
                     </select>
                     <label class="block text-sm font-medium mb-1" data-i18n="thickness">Thickness (mm)</label>
-                    <input type="number" id="thk1" value="10" class="w-full border rounded p-2 text-sm" onchange="generateSmartWPS()">
+                    <input type="number" id="thk1" value="10" class="form-input" onchange="generateSmartWPS()" oninput="generateSmartWPS()">
                 </div>
 
                 <!-- Base Metal 2 -->
                 <div class="bg-gray-50 p-3 rounded border">
                     <label class="block text-sm font-bold mb-2 text-blue-800" data-i18n="baseMetal2">Base Metal 2</label>
-                    <select id="bm2" class="w-full border rounded p-2 text-sm mb-2" onchange="generateSmartWPS()">
+                    <select id="bm2" class="form-select mb-2" onchange="generateSmartWPS()">
                         <option value="A36">ASTM A36 (EN 10025 S235JR)</option>
                         <option value="A572-50">ASTM A572 Gr50 (EN 10025 S355J2)</option>
                         <option value="A516-70">ASTM A516 Gr70 (EN 10028 P355GH)</option>
@@ -141,13 +226,13 @@
                         <option value="A242">ASTM A242 (EN 10027 S355J2W)</option>
                     </select>
                     <label class="block text-sm font-medium mb-1" data-i18n="thickness">Thickness (mm)</label>
-                    <input type="number" id="thk2" value="10" class="w-full border rounded p-2 text-sm" onchange="generateSmartWPS()">
+                    <input type="number" id="thk2" value="10" class="form-input" onchange="generateSmartWPS()" oninput="generateSmartWPS()">
                 </div>
 
                 <!-- Joint Type -->
                 <div>
                     <label class="block text-sm font-medium mb-1" data-i18n="jointType">Joint Type</label>
-                    <select id="jointType" class="w-full border rounded p-2 text-sm" onchange="generateSmartWPS()">
+                    <select id="jointType" class="form-select" onchange="generateSmartWPS()">
                         <option value="Butt (V-Groove)">Butt (V-Groove)</option>
                         <option value="Fillet">Fillet</option>
                         <option value="T-Joint">T-Joint</option>
@@ -161,12 +246,12 @@
         <!-- WPS Output Section (Right side) -->
         <div class="lg:col-span-8">
             <!-- Action Buttons -->
-            <div class="flex flex-wrap gap-2 justify-end mb-4">
-                <button onclick="exportPDF()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded shadow flex items-center gap-2">
+            <div class="flex flex-wrap gap-2 justify-start md:justify-end mb-3 md:mb-4">
+                <button onclick="exportPDF()" class="btn-icon bg-red-600 hover:bg-red-700 text-white shadow flex-1 md:flex-none">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                     <span data-i18n="exportPdf">Export PDF</span>
                 </button>
-                <button onclick="exportExcel()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow flex items-center gap-2">
+                <button onclick="exportExcel()" class="btn-icon bg-green-600 hover:bg-green-700 text-white shadow flex-1 md:flex-none">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                     <span data-i18n="exportExcel">Export Excel</span>
                 </button>
@@ -175,152 +260,171 @@
             <!-- Printable WPS Document -->
             <div id="wpsDocument" class="wps-document" style="color: black;">
                 
-                <h1 class="text-2xl font-bold text-center mb-4 border-b-2 border-black pb-2" data-i18n="wpsHeader">WELDING PROCEDURE SPECIFICATION (WPS)</h1>
+                <h1 class="text-xl md:text-2xl font-bold text-center mb-3 border-b-2 border-black pb-2" data-i18n="wpsHeader">WELDING PROCEDURE SPECIFICATION (WPS)</h1>
                 
                 <!-- General Info -->
-                <table class="wps-table wps-header-table">
-                    <tr>
-                        <td><strong><span data-i18n="companyName">Company Name:</span></strong> Smart Weld Co.</td>
-                        <td><strong><span data-i18n="wpsNo">WPS No.:</span></strong> <span id="outWpsNo">WPS-001</span></td>
-                    </tr>
-                    <tr>
-                        <td><strong><span data-i18n="weldingProcess">Welding Process:</span></strong> <span id="outProcess">SMAW</span></td>
-                        <td><strong><span data-i18n="code">Code/Standard:</span></strong> AWS D1.1 (Structural Welding Code - Steel)</td>
-                    </tr>
-                    <tr>
-                        <td><strong><span data-i18n="date">Date:</span></strong> <span id="outDate"></span></td>
-                        <td><strong><span data-i18n="type">Type:</span></strong> Semi-Automatic / Manual</td>
-                    </tr>
-                </table>
+                <div class="table-wrap">
+                    <table class="wps-table wps-header-table">
+                        <tr>
+                            <td><strong><span data-i18n="companyName">Company Name:</span></strong> <span id="outCompanyName">Smart Weld Co.</span></td>
+                            <td><strong><span data-i18n="wpsNo">WPS No.:</span></strong> <span id="outWpsNo">WPS-001</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong><span data-i18n="weldingProcess">Welding Process:</span></strong> <span id="outProcess">SMAW</span></td>
+                            <td><strong><span data-i18n="code">Code/Standard:</span></strong> AWS D1.1</td>
+                        </tr>
+                        <tr>
+                            <td><strong><span data-i18n="date">Date:</span></strong> <span id="outDate"></span></td>
+                            <td><strong><span data-i18n="type">Type:</span></strong> Semi-Automatic / Manual</td>
+                        </tr>
+                    </table>
+                </div>
 
                 <!-- Joint Design -->
                 <div class="section-title" data-i18n="jointDesignTitle">JOINT DESIGN</div>
-                <table class="wps-table">
-                    <tr>
-                        <td width="30%"><strong><span data-i18n="jointTypeLabel">Type:</span></strong> <span id="outJointType">Butt</span></td>
-                        <td width="30%"><strong><span data-i18n="backing">Backing:</span></strong> Optional</td>
-                        <td width="40%"><strong><span data-i18n="rootOpening">Root Opening:</span></strong> 2-3 mm | <strong><span data-i18n="grooveAngle">Angle:</span></strong> 60°</td>
-                    </tr>
-                </table>
+                <div class="table-wrap">
+                    <table class="wps-table">
+                        <tr>
+                            <td width="30%"><strong><span data-i18n="jointTypeLabel">Type:</span></strong> <span id="outJointType">Butt</span></td>
+                            <td width="30%"><strong><span data-i18n="backing">Backing:</span></strong> Optional</td>
+                            <td width="40%"><strong><span data-i18n="rootOpening">Root Opening:</span></strong> 2-3 mm | <strong><span data-i18n="grooveAngle">Angle:</span></strong> 60°</td>
+                        </tr>
+                    </table>
+                </div>
 
                 <!-- Base Metals -->
                 <div class="section-title" data-i18n="baseMetalsTitle">BASE METALS</div>
-                <table class="wps-table">
-                    <tr>
-                        <th>Material</th>
-                        <th>Standard / Grade (ASTM & EN)</th>
-                        <th>AWS Group</th>
-                        <th>Thickness (mm)</th>
-                    </tr>
-                    <tr>
-                        <td>Base Metal 1</td>
-                        <td id="outBm1Name">ASTM A36 (EN 10025 S235JR)</td>
-                        <td id="outBm1Group">I</td>
-                        <td id="outBm1Thk">10</td>
-                    </tr>
-                    <tr>
-                        <td>Base Metal 2</td>
-                        <td id="outBm2Name">ASTM A36 (EN 10025 S235JR)</td>
-                        <td id="outBm2Group">I</td>
-                        <td id="outBm2Thk">10</td>
-                    </tr>
-                </table>
+                <div class="table-wrap">
+                    <table class="wps-table">
+                        <tr>
+                            <th>Material</th>
+                            <th>Standard / Grade</th>
+                            <th>AWS Group</th>
+                            <th>Thickness (mm)</th>
+                        </tr>
+                        <tr>
+                            <td>Base Metal 1</td>
+                            <td id="outBm1Name">ASTM A36</td>
+                            <td id="outBm1Group">I</td>
+                            <td id="outBm1Thk">10</td>
+                        </tr>
+                        <tr>
+                            <td>Base Metal 2</td>
+                            <td id="outBm2Name">ASTM A36</td>
+                            <td id="outBm2Group">I</td>
+                            <td id="outBm2Thk">10</td>
+                        </tr>
+                    </table>
+                </div>
 
                 <!-- Filler Metals -->
                 <div class="section-title" data-i18n="fillerMetalsTitle">FILLER METALS</div>
-                <table class="wps-table">
-                    <tr>
-                        <td width="50%"><strong><span data-i18n="awsSpecification">AWS Specification:</span></strong> <span id="outFillerSpec">A5.1</span></td>
-                        <td width="50%"><strong><span data-i18n="awsClassification">AWS Classification:</span></strong> <span id="outFillerClass" class="font-bold text-red-700 bg-red-50 px-1">E7018</span></td>
-                    </tr>
-                </table>
+                <div class="table-wrap">
+                    <table class="wps-table">
+                        <tr>
+                            <td width="50%"><strong><span data-i18n="awsSpecification">AWS Spec:</span></strong> <span id="outFillerSpec">A5.1</span></td>
+                            <td width="50%"><strong><span data-i18n="awsClassification">AWS Class:</span></strong> <span id="outFillerClass" class="font-bold text-red-700 bg-red-50 px-1">E7018</span></td>
+                        </tr>
+                    </table>
+                </div>
 
-                <!-- Shielding & Preheat (Smart Logic) -->
-                <div class="grid grid-cols-2 gap-0">
+                <!-- Shielding & Preheat -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0">
                     <div>
                         <div class="section-title" style="margin-right: -1px;" data-i18n="shieldingTitle">SHIELDING</div>
-                        <table class="wps-table" style="margin-bottom: 0;">
-                            <tr>
-                                <td><strong><span data-i18n="gasType">Gas:</span></strong> <span id="outGas">None</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong><span data-i18n="gasFlow">Flow Rate:</span></strong> <span id="outGasFlow">N/A</span></td>
-                            </tr>
-                        </table>
+                        <div class="table-wrap">
+                            <table class="wps-table" style="margin-bottom: 0;">
+                                <tr>
+                                    <td><strong><span data-i18n="gasType">Gas:</span></strong> <span id="outGas">None</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong><span data-i18n="gasFlow">Flow Rate:</span></strong> <span id="outGasFlow">N/A</span></td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                     <div>
                         <div class="section-title" data-i18n="preheatTitle">PREHEAT & INTERPASS</div>
-                        <table class="wps-table" style="margin-bottom: 0;">
-                            <tr>
-                                <td><strong><span data-i18n="minPreheat">Min. Preheat Temp:</span></strong> <span id="outPreheat" class="font-bold text-red-700 bg-red-50 px-1">10°C (50°F)</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong><span data-i18n="maxInterpass">Max. Interpass Temp:</span></strong> <span id="outInterpass">250°C (480°F)</span></td>
-                            </tr>
-                        </table>
+                        <div class="table-wrap">
+                            <table class="wps-table" style="margin-bottom: 0;">
+                                <tr>
+                                    <td><strong><span data-i18n="minPreheat">Min. Preheat:</span></strong> <span id="outPreheat" class="font-bold text-red-700 bg-red-50 px-1">10°C</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong><span data-i18n="maxInterpass">Max. Interpass:</span></strong> <span id="outInterpass">250°C</span></td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Position & Technique -->
-                <div class="grid grid-cols-2 gap-0">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0">
                     <div>
                         <div class="section-title" style="margin-right: -1px; margin-top:0;" data-i18n="positionTitle">POSITION</div>
-                        <table class="wps-table">
-                            <tr>
-                                <td><strong><span data-i18n="weldingPosition">Position of Groove/Fillet:</span></strong> <span id="outPosition">1G</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong><span data-i18n="progression">Progression:</span></strong> <span id="outProgression">Upward</span></td>
-                            </tr>
-                        </table>
+                        <div class="table-wrap">
+                            <table class="wps-table">
+                                <tr>
+                                    <td><strong><span data-i18n="weldingPosition">Position:</span></strong> <span id="outPosition">1G</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong><span data-i18n="progression">Progression:</span></strong> <span id="outProgression">Upward</span></td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                     <div>
                         <div class="section-title" style="margin-top:0;" data-i18n="techniqueTitle">TECHNIQUE</div>
-                        <table class="wps-table">
-                            <tr>
-                                <td><strong><span data-i18n="stringerWeave">Stringer or Weave:</span></strong> Both</td>
-                            </tr>
-                            <tr>
-                                <td><strong><span data-i18n="cleaning">Interpass Cleaning:</span></strong> Grinding / Brushing</td>
-                            </tr>
-                        </table>
+                        <div class="table-wrap">
+                            <table class="wps-table">
+                                <tr>
+                                    <td><strong><span data-i18n="stringerWeave">Stringer/Weave:</span></strong> Both</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><span data-i18n="cleaning">Interpass Cleaning:</span></strong> Grinding / Brushing</td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Electrical Characteristics -->
-                <div class="section-title" style="margin-top: -1rem;" data-i18n="electricalTitle">ELECTRICAL CHARACTERISTICS (Smart Suggestion)</div>
-                <table class="wps-table" id="weldParamsTable">
-                    <tr>
-                        <th>Pass</th>
-                        <th>Process</th>
-                        <th>Filler Dia. (mm)</th>
-                        <th>Current Type / Polarity</th>
-                        <th>Amps (A)</th>
-                        <th>Volts (V)</th>
-                        <th>Travel Speed (cm/min)</th>
-                    </tr>
-                    <tr>
-                        <td>Root</td>
-                        <td class="outProcessRow">SMAW</td>
-                        <td id="outDia1">2.5 / 3.2</td>
-                        <td id="outPolarity1">DCEP</td>
-                        <td id="outAmp1" class="font-bold text-blue-800">90 - 130</td>
-                        <td id="outVolt1">20 - 24</td>
-                        <td id="outSpeed1">10 - 20</td>
-                    </tr>
-                    <tr>
-                        <td>Fill/Cap</td>
-                        <td class="outProcessRow">SMAW</td>
-                        <td id="outDia2">3.2 / 4.0</td>
-                        <td id="outPolarity2">DCEP</td>
-                        <td id="outAmp2" class="font-bold text-blue-800">120 - 170</td>
-                        <td id="outVolt2">21 - 26</td>
-                        <td id="outSpeed2">15 - 25</td>
-                    </tr>
-                </table>
+                <div class="section-title" style="margin-top: 0.5rem;" data-i18n="electricalTitle">ELECTRICAL CHARACTERISTICS</div>
+                <div class="table-wrap">
+                    <table class="wps-table" id="weldParamsTable">
+                        <tr>
+                            <th>Pass</th>
+                            <th>Process</th>
+                            <th>Dia. (mm)</th>
+                            <th>Polarity</th>
+                            <th>Amps (A)</th>
+                            <th>Volts (V)</th>
+                            <th>Speed (cm/min)</th>
+                        </tr>
+                        <tr>
+                            <td>Root</td>
+                            <td class="outProcessRow">SMAW</td>
+                            <td id="outDia1">2.5 / 3.2</td>
+                            <td id="outPolarity1">DCEP</td>
+                            <td id="outAmp1" class="font-bold text-blue-800">90 - 130</td>
+                            <td id="outVolt1">20 - 24</td>
+                            <td id="outSpeed1">10 - 20</td>
+                        </tr>
+                        <tr>
+                            <td>Fill/Cap</td>
+                            <td class="outProcessRow">SMAW</td>
+                            <td id="outDia2">3.2 / 4.0</td>
+                            <td id="outPolarity2">DCEP</td>
+                            <td id="outAmp2" class="font-bold text-blue-800">120 - 170</td>
+                            <td id="outVolt2">21 - 26</td>
+                            <td id="outSpeed2">15 - 25</td>
+                        </tr>
+                    </table>
+                </div>
                 
-                <div class="mt-8 text-xs text-gray-500 italic" data-i18n="disclaimer">
-                    * This WPS is generated intelligently based on AWS D1.1 prequalified rules for educational/estimation purposes. Actual qualification tests (PQR) may be required depending on project specs.
+                <!-- Disclaimer with signature -->
+                <div class="mt-4 md:mt-6 text-xs text-gray-500 italic" data-i18n="disclaimer">
+                    * This WPS is generated intelligently based on AWS D1.1 prequalified rules for educational/estimation purposes. Actual qualification tests (PQR) may be required depending on project specs. – Created by Walid Ahmed Yosuf @2026
                 </div>
 
             </div>
@@ -343,6 +447,8 @@
             en: {
                 appTitle: "AWS D1.1 Smart WPS Generator",
                 inputDataTitle: "Original Data Input",
+                companyNameInput: "Company Name",
+                wpsNoInput: "WPS No.",
                 process: "Welding Process",
                 position: "Position",
                 baseMetal1: "Base Metal 1",
@@ -380,11 +486,13 @@
                 stringerWeave: "Stringer or Weave:",
                 cleaning: "Interpass Cleaning:",
                 electricalTitle: "ELECTRICAL CHARACTERISTICS (Smart Suggestion)",
-                disclaimer: "* This WPS is generated intelligently based on AWS D1.1 prequalified rules for educational/estimation purposes. Actual qualification tests (PQR) may be required depending on project specs."
+                disclaimer: "* This WPS is generated intelligently based on AWS D1.1 prequalified rules for educational/estimation purposes. Actual qualification tests (PQR) may be required depending on project specs. – Created by Walid Ahmed Yosuf @2026"
             },
             ar: {
                 appTitle: "المولد الذكي لمواصفات اللحام AWS D1.1",
                 inputDataTitle: "إدخال البيانات الأساسية",
+                companyNameInput: "اسم الشركة",
+                wpsNoInput: "رقم WPS",
                 process: "عملية اللحام",
                 position: "وضعية اللحام",
                 baseMetal1: "المعدن الأساسي 1",
@@ -422,7 +530,7 @@
                 stringerWeave: "طريقة السحب:",
                 cleaning: "التنظيف بين الطبقات:",
                 electricalTitle: "المعاملات الكهربائية (اقتراح ذكي)",
-                disclaimer: "* تم إنشاء هذا الـ WPS بذكاء بناءً على قواعد AWS D1.1 للأغراض التعليمية والتقديرية. قد يتطلب الأمر اختبارات تأهيل فعلية (PQR) حسب مواصفات المشروع."
+                disclaimer: "* تم إنشاء هذا الـ WPS بذكاء بناءً على قواعد AWS D1.1 للأغراض التعليمية والتقديرية. قد يتطلب الأمر اختبارات تأهيل فعلية (PQR) حسب مواصفات المشروع. – من إعداد وليد أحمد يوسف @2026"
             }
         };
 
@@ -433,7 +541,13 @@
 
         // --- 3. The "SMART" Core Logic ---
         function generateSmartWPS() {
-            // Get inputs
+            // Read user inputs for Company & WPS No.
+            const companyName = document.getElementById('companyNameInput').value || "Smart Weld Co.";
+            const wpsNo = document.getElementById('wpsNoInput').value || "WPS-001";
+            document.getElementById('outCompanyName').innerText = companyName;
+            document.getElementById('outWpsNo').innerText = wpsNo;
+
+            // Read other inputs
             const process = document.getElementById('process').value;
             const pos = document.getElementById('position').value;
             const jointType = document.getElementById('jointType').value;
@@ -446,7 +560,6 @@
             const thk2 = parseFloat(document.getElementById('thk2').value) || 0;
             const bm2 = materialsDB[bm2Key];
 
-            // Update UI with inputs
             document.getElementById('outProcess').innerText = process;
             const processElements = document.getElementsByClassName('outProcessRow');
             for(let i=0; i<processElements.length; i++) processElements[i].innerText = process;
@@ -462,12 +575,9 @@
             document.getElementById('outBm2Group').innerText = bm2.group === 1 ? "I" : "II";
             document.getElementById('outBm2Thk').innerText = thk2;
 
-            // SMART RULE 1: Filler Metal Selection
-            // Based on material group matching and process
+            // Filler Metal
             const maxGroup = Math.max(bm1.group, bm2.group);
-            let fillerSpec = "";
-            let fillerClass = "";
-
+            let fillerSpec = "", fillerClass = "";
             if (process === "SMAW") {
                 fillerSpec = "A5.1 / A5.5";
                 fillerClass = (maxGroup === 1) ? "E7018" : "E7018-1";
@@ -484,23 +594,22 @@
             document.getElementById('outFillerSpec').innerText = fillerSpec;
             document.getElementById('outFillerClass').innerText = fillerClass;
 
-            // SMART RULE 2: Preheat calculation based on AWS D1.1 Table 3.3 (Simplified)
+            // Preheat
             const maxThk = Math.max(thk1, thk2);
-            let preheat = "10°C (50°F)"; // Default
-            
-            if (maxGroup === 1) { // Group 1 materials
+            let preheat = "10°C (50°F)";
+            if (maxGroup === 1) {
                 if (maxThk > 19 && maxThk <= 38) preheat = "65°C (150°F)";
                 if (maxThk > 38 && maxThk <= 63.5) preheat = "107°C (225°F)";
                 if (maxThk > 63.5) preheat = "150°C (300°F)";
-            } else { // Group 2 materials (A572, A516 etc)
+            } else {
                 if (maxThk <= 19) preheat = "10°C (50°F)";
-                if (maxThk > 19 && maxThk <= 38) preheat = "65°C (150°F)"; // usually higher but simplified
+                if (maxThk > 19 && maxThk <= 38) preheat = "65°C (150°F)";
                 if (maxThk > 38 && maxThk <= 63.5) preheat = "107°C (225°F)";
                 if (maxThk > 63.5) preheat = "150°C (300°F)";
             }
             document.getElementById('outPreheat').innerText = preheat;
 
-            // SMART RULE 3: Shielding Gas
+            // Shielding
             if (process === "SMAW") {
                 document.getElementById('outGas').innerText = "None (Flux)";
                 document.getElementById('outGasFlow').innerText = "N/A";
@@ -515,8 +624,7 @@
                 document.getElementById('outGasFlow').innerText = "10 - 15 L/min";
             }
 
-            // SMART RULE 4: Parameters Suggestion
-            // Very simplified approximation for demonstration
+            // Parameters
             if(process === "SMAW") {
                 document.getElementById('outAmp1').innerText = "90 - 130";
                 document.getElementById('outVolt1').innerText = "20 - 24";
@@ -539,35 +647,31 @@
                 document.getElementById('outVolt2').innerText = "14 - 18";
             }
 
-            // Progression
             if(pos.includes("3") || pos === "All") {
                 document.getElementById('outProgression').innerText = "Upward (Vertical Up)";
             } else {
                 document.getElementById('outProgression').innerText = "N/A";
             }
 
-            // Generate Random ID
-            document.getElementById('outWpsNo').innerText = "WPS-" + process + "-" + new Date().getTime().toString().slice(-4);
+            // No longer generating automatic WPS No. - user provides it
         }
 
-        // --- 4. Language Toggle (i18n) ---
+        // --- 4. Language Toggle ---
         function toggleLanguage() {
             currentLang = currentLang === 'en' ? 'ar' : 'en';
-            
-            // Toggle Direction
             document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
             document.body.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-
-            // Change Button Text
             document.getElementById('langToggleBtn').innerText = currentLang === 'ar' ? 'English' : 'عربي';
 
-            // Update all translated elements
-            const elements = document.querySelectorAll('[data-i18n]');
-            elements.forEach(el => {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (i18n[currentLang][key]) {
                     if (el.tagName === 'INPUT' && el.type === 'placeholder') {
                         el.placeholder = i18n[currentLang][key];
+                    } else if (el.tagName === 'INPUT' && el.type === 'text') {
+                        // For text inputs, we keep the value but update placeholder if any
+                        // We can also update the label separately, but we use data-i18n on labels already
+                        // For input fields themselves, we might not want to change value, only placeholder
                     } else {
                         el.innerText = i18n[currentLang][key];
                     }
@@ -580,7 +684,7 @@
             const element = document.getElementById('wpsDocument');
             const opt = {
                 margin:       10,
-                filename:     document.getElementById('outWpsNo').innerText + '.pdf',
+                filename:     (document.getElementById('wpsNoInput').value || 'WPS') + '.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2 },
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -589,14 +693,11 @@
         }
 
         function exportExcel() {
-            // Simplified export: we will grab data directly from the DOM to construct an Excel sheet
             const wb = XLSX.utils.book_new();
-            
-            // Build array of arrays for Excel
             const ws_data = [
                 ["WELDING PROCEDURE SPECIFICATION (WPS)"],
                 [],
-                ["Company Name:", "Smart Weld Co.", "WPS No.:", document.getElementById('outWpsNo').innerText],
+                ["Company Name:", document.getElementById('companyNameInput').value || "Smart Weld Co.", "WPS No.:", document.getElementById('wpsNoInput').value || "WPS-001"],
                 ["Process:", document.getElementById('outProcess').innerText, "Code:", "AWS D1.1"],
                 ["Date:", document.getElementById('outDate').innerText],
                 [],
@@ -618,19 +719,14 @@
                 ["Process", "Amps", "Volts"],
                 [document.getElementById('outProcess').innerText, document.getElementById('outAmp1').innerText, document.getElementById('outVolt1').innerText]
             ];
-
             const ws = XLSX.utils.aoa_to_sheet(ws_data);
             XLSX.utils.book_append_sheet(wb, ws, "WPS");
-            
-            // Save file
-            XLSX.writeFile(wb, document.getElementById('outWpsNo').innerText + ".xlsx");
+            XLSX.writeFile(wb, (document.getElementById('wpsNoInput').value || 'WPS') + ".xlsx");
         }
 
-        // Initialize on load
         window.onload = () => {
             generateSmartWPS();
         };
-
     </script>
 </body>
 </html>
